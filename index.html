@@ -272,29 +272,29 @@ const SLIDES=[
   {title:"Escriban sus recuerdos",body:"Un diario compartido para los dos. Cada momento especial, guardado para siempre."},
 ];
 
-const STORE="https://www.jsonstore.io";
-// Genera un ID único de 12 chars
-function genId(){return Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,8);}
+// ── Juntos Worker (Cloudflare) ──
+// Reemplazá esta URL con la URL de tu Worker desplegado
+const WORKER_URL = "https://juntos-sync.lucas-ramirez2210.workers.dev";
+
 async function bRead(id){
   try{
-    const r=await fetch(`${STORE}/${id}`);
+    const r=await fetch(`${WORKER_URL}/pair/${id}`);
     if(!r.ok)return null;
-    const j=await r.json();
-    return j.result||null;
+    return await r.json();
   }catch{return null;}
 }
 async function bWrite(id,d){
   try{
-    const r=await fetch(`${STORE}/${id}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});
+    const r=await fetch(`${WORKER_URL}/pair/${id}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});
     return r.ok;
   }catch{return false;}
 }
 async function bCreate(d){
   try{
-    const id=genId();
-    const r=await fetch(`${STORE}/${id}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});
+    const r=await fetch(`${WORKER_URL}/pair`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});
     if(!r.ok)return null;
-    return id;
+    const j=await r.json();
+    return j.id||null;
   }catch{return null;}
 }
 
@@ -470,7 +470,8 @@ function App(){
       </div>
       <div className="reset-zone">
         <p>¿Querés usar un código diferente o empezar de cero?</p>
-        <button className="reset-btn" onClick={doReset}>Reiniciar app</button>
+        <button className="reset-btn" onClick={doReset} style={{marginBottom:8}}>Reiniciar app</button>
+        <button className="reset-btn" onClick={()=>{localStorage.removeItem("juntos-fb");localStorage.removeItem("juntos-local");window.location.reload();}}>Cambiar base de datos Firebase</button>
       </div>
     </div></div>}
   </>);
