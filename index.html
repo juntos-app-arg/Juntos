@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
 <meta name="theme-color" content="#1A1209"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 <meta name="apple-mobile-web-app-title" content="Juntos"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <title>Juntos</title>
@@ -13,10 +13,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap"/>
 <script>
 (function(){
-  var m={name:"Juntos",short_name:"Juntos",description:"Un diario de viaje para los dos",start_url:"./",display:"standalone",background_color:"#EDE4D0",theme_color:"#1A1209",orientation:"portrait",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%231A1209'/%3E%3Ctext x='50%25' y='60%25' font-family='Georgia,serif' font-size='240' fill='%23E8D8B4' text-anchor='middle' dominant-baseline='middle' font-style='italic'%3Ej%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
+  // ── PWA icon: avión + "juntos" en fondo espresso ──
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#1A1209"/><circle cx="256" cy="215" r="148" fill="none" stroke="#B07848" stroke-width="5" opacity="0.22"/><path d="M306 152 L176 232 L132 222 C114 217 106 232 115 244L127 259 L209 263 L158 320 L144 315 C134 311 126 322 131 330L136 339 L179 347 L209 378 L217 373 C226 363 221 353 217 345L213 305 L283 333 L293 351 C298 361 311 359 315 351L319 341 L311 301 L269 243 L355 195 C374 185 372 163 358 155 C345 147 321 143 306 152Z" fill="#E8D8B4"/><text x="256" y="435" font-family="Georgia,serif" font-size="62" fill="#B07848" text-anchor="middle" font-style="italic" letter-spacing="5">juntos</text></svg>';
+  var enc = 'data:image/svg+xml,' + encodeURIComponent(svg);
+  var m={name:"Juntos",short_name:"Juntos",start_url:"./",display:"standalone",background_color:"#1A1209",theme_color:"#1A1209",orientation:"portrait",icons:[{src:enc,sizes:"512x512",type:"image/svg+xml"},{src:enc,sizes:"192x192",type:"image/svg+xml"}]};
   var b=new Blob([JSON.stringify(m)],{type:"application/json"});
-  var l=document.createElement("link");l.rel="manifest";l.href=URL.createObjectURL(b);
-  document.head.appendChild(l);
+  var l=document.createElement("link");l.rel="manifest";l.href=URL.createObjectURL(b);document.head.appendChild(l);
+  var li=document.createElement("link");li.rel="apple-touch-icon";li.href=enc;document.head.appendChild(li);
 })();
 </script>
 <style>
@@ -26,7 +29,7 @@ html,body{height:100%;overflow-x:hidden}
 body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 #root{min-height:100vh;min-height:100dvh}
 
-/* ── ANIMS ── */
+/* ANIMS */
 .cr{position:fixed;width:64px;height:64px;border-radius:50%;transform:translate(-50%,-50%) scale(0);z-index:500;pointer-events:none}
 .cr.in{animation:cIn .55s cubic-bezier(.22,.61,.36,1) forwards}
 .cr.out{animation:cOut .35s cubic-bezier(.4,0,.6,1) forwards}
@@ -39,94 +42,81 @@ body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--t1);-webkit-
 @keyframes lineGrow{from{width:0}to{width:56px}}
 @keyframes pip{from{transform:scale(0)}to{transform:scale(1)}}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
 .fu{animation:fadeUp .38s cubic-bezier(.4,0,.2,1) both}
-.fi{animation:fadeIn .45s ease both}
+.fad{animation:fadeIn .45s ease both}
 
-/* ── ONBOARDING SHELL ── */
-.ob{min-height:100vh;min-height:100dvh;background:linear-gradient(165deg,#EDE4D0 0%,#DDD0A8 50%,#C8B888 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:32px 24px}
-.ob-r{position:absolute;border-radius:50%;border:1px solid rgba(138,92,42,.13)}
-.ob-content{position:relative;z-index:1;width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center}
-
-/* ── SPLASH ── */
-.ob-splash{min-height:80dvh;justify-content:space-between;padding:16px 0}
+/* ONBOARDING */
+.ob{min-height:100dvh;background:linear-gradient(165deg,#EDE4D0 0%,#DDD0A8 50%,#C8B888 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow-y:auto;overflow-x:hidden;padding:32px 24px;padding-top:max(40px,calc(env(safe-area-inset-top,0px) + 24px))}
+.ob-r{position:absolute;border-radius:50%;border:1px solid rgba(138,92,42,.13);pointer-events:none}
+.ob-c{position:relative;z-index:1;width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center}
+.ob-splash{min-height:80dvh;justify-content:space-between;padding:8px 0}
 .ob-orn{font-size:11px;color:var(--acc);letter-spacing:10px;opacity:.55}
-.ob-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
-.ob-wm{font-family:'Italiana',serif;font-size:clamp(96px,26vw,144px);font-weight:400;color:var(--t1);letter-spacing:8px;line-height:1;text-align:center;animation:wmReveal .9s cubic-bezier(.22,.61,.36,1) both .35s}
+.ob-mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+.ob-wm{font-family:'Italiana',serif;font-size:clamp(88px,24vw,136px);font-weight:400;color:var(--t1);letter-spacing:8px;line-height:1;text-align:center;animation:wmReveal .9s cubic-bezier(.22,.61,.36,1) both .35s}
 .ob-line{width:0;height:1px;background:var(--acc);opacity:.45;animation:lineGrow .7s ease both .9s}
 .ob-tag{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;font-weight:300;color:var(--t2);line-height:1.5;text-align:center;opacity:0;animation:fadeIn .6s ease both 1s}
 .ob-bot{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
 .ob-dots{color:var(--t3);font-size:13px;letter-spacing:5px;opacity:0;animation:fadeIn .5s ease both 1.2s}
 .ob-desc{font-size:14px;color:var(--t3);line-height:1.75;text-align:center;opacity:0;animation:fadeIn .5s ease both 1.35s}
-
-/* ── CTA BUTTON ── */
-.ob-cta{background:var(--t1);color:#F8F3E8;border:none;border-radius:14px;padding:15px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;width:100%;transition:background .2s;opacity:0;animation:fadeIn .5s ease both 1.5s}
-.ob-cta:hover{background:var(--acc2)}.ob-cta:active{transform:scale(.97)}.ob-cta:disabled{opacity:.4!important;cursor:not-allowed}
-.ob-cta.noani{opacity:1;animation:none}
-
-/* ── INTRO SLIDES ── */
-.slides-wrap{width:100%;overflow:hidden;margin-bottom:24px}
-.slides-track{display:flex;transition:transform .4s cubic-bezier(.4,0,.2,1)}
-.slide{min-width:100%;display:flex;flex-direction:column;align-items:center;padding:8px 0 4px;text-align:center}
-.slide-icon{width:72px;height:72px;border-radius:20px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;font-size:32px}
-.slide-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--t1);margin-bottom:8px;line-height:1.2}
-.slide-body{font-size:14px;color:var(--t3);line-height:1.75;max-width:280px}
-.slide-dots{display:flex;gap:7px;justify-content:center;margin-bottom:20px}
-.sdot{width:6px;height:6px;border-radius:50%;background:var(--brd);transition:all .25s;cursor:pointer}
-.sdot.on{background:var(--acc);width:18px;border-radius:4px}
-.slides-nav{display:flex;gap:10px;width:100%}
-.sback{flex:0 0 auto;background:var(--div);color:var(--t2);border:none;border-radius:12px;padding:13px 18px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;cursor:pointer}
-.snext{flex:1;background:var(--t1);color:#F8F3E8;border:none;border-radius:12px;padding:13px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s}
-.snext:hover{background:var(--acc2)}
-
-/* ── NAMES STEP ── */
-.ob-mini{font-family:'Italiana',serif;font-size:30px;letter-spacing:5px;color:var(--t1);text-align:center;margin-bottom:14px}
-.ob-nt{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--t1);margin-bottom:6px;text-align:center}
-.ob-ns{font-size:13px;color:var(--t3);line-height:1.6;text-align:center;margin-bottom:24px}
-.ob-fields{width:100%;margin-bottom:20px}
-.ob-lbl{display:block;font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
-.ob-inp{width:100%;padding:12px 16px;background:#F8F3E8;border:1.5px solid var(--brd);border-radius:12px;font-family:'Jost',sans-serif;font-size:16px;color:var(--t1);outline:none;transition:border-color .2s;text-align:center}
+.cta{background:var(--t1);color:#F8F3E8;border:none;border-radius:14px;padding:14px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;width:100%;transition:background .2s}
+.cta:hover{background:var(--acc2)}.cta:active{transform:scale(.97)}.cta:disabled{opacity:.35;cursor:not-allowed}
+.cta-ani{opacity:0;animation:fadeIn .5s ease both 1.5s}
+/* slides */
+.sw{width:100%;overflow:hidden;margin-bottom:18px}
+.st{display:flex;transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.sl{min-width:100%;display:flex;flex-direction:column;align-items:center;padding:4px 0;text-align:center}
+.si{width:68px;height:68px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:32px}
+.sh{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:500;color:var(--t1);margin-bottom:8px}
+.sb{font-size:14px;color:var(--t3);line-height:1.75;max-width:280px}
+.sdots{display:flex;gap:7px;justify-content:center;margin-bottom:18px}
+.sd{width:6px;height:6px;border-radius:50%;background:var(--brd);transition:all .25s;cursor:pointer}
+.sd.on{background:var(--acc);width:18px;border-radius:4px}
+.snav{display:flex;gap:10px;width:100%}
+.sbk{flex:0 0 auto;background:var(--div);color:var(--t2);border:none;border-radius:12px;padding:13px 18px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;cursor:pointer}
+.snx{flex:1;background:var(--t1);color:#F8F3E8;border:none;border-radius:12px;padding:13px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.snx:hover{background:var(--acc2)}
+/* names */
+.ob-mini{font-family:'Italiana',serif;font-size:28px;letter-spacing:5px;color:var(--t1);text-align:center;margin-bottom:12px}
+.ob-nt{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;color:var(--t1);margin-bottom:6px;text-align:center}
+.ob-ns{font-size:13px;color:var(--t3);line-height:1.6;text-align:center;margin-bottom:20px}
+.ob-inp{width:100%;padding:12px 16px;background:#F8F3E8;border:1.5px solid var(--brd);border-radius:12px;font-family:'Jost',sans-serif;font-size:16px;color:var(--t1);outline:none;transition:border-color .2s;text-align:center;margin-bottom:4px}
 .ob-inp:focus{border-color:var(--acc)}.ob-inp::placeholder{color:var(--t3);font-size:14px}
-.ob-amp{height:36px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;color:var(--acc);opacity:.7}
-.ob-prev{margin-bottom:20px;padding:11px 16px;background:rgba(176,120,72,.08);border-radius:12px;border:1px solid rgba(176,120,72,.2);width:100%;text-align:center}
+.ob-amp{height:32px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;color:var(--acc);opacity:.7}
+.ob-prev{margin-bottom:18px;padding:10px 16px;background:rgba(176,120,72,.08);border-radius:12px;border:1px solid rgba(176,120,72,.2);width:100%;text-align:center}
 .ob-prev span{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--t1)}
 .ob-prev em{font-style:italic;color:var(--acc);margin:0 5px}
 .ob-back{background:transparent;border:none;font-family:'Jost',sans-serif;font-size:13px;color:var(--t3);cursor:pointer;margin-top:14px;padding:6px}
+/* pair boxes */
+.pc-box{background:rgba(176,120,72,.07);border:1px solid rgba(176,120,72,.2);border-radius:14px;padding:16px;margin-bottom:14px;width:100%}
+.pc-lbl{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.pc-or{text-align:center;color:var(--t3);font-size:12px;margin:2px 0 10px;letter-spacing:2px;text-transform:uppercase}
+/* code display */
+.codebox{background:var(--card);border:2px solid var(--acc);border-radius:14px;padding:18px 16px;width:100%;margin-bottom:16px;text-align:center}
+.codeval{font-family:monospace;font-size:12px;word-break:break-all;color:var(--t1);line-height:1.6;margin:8px 0 12px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--brd);user-select:all;-webkit-user-select:all}
+.copybtn{width:100%;background:var(--acc);color:white;border:none;border-radius:10px;padding:11px;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.copybtn.ok{background:#4A7A4A}
 
-/* ── PAIR CODE BOXES ── */
-.pc-box{background:rgba(176,120,72,.07);border:1px solid rgba(176,120,72,.2);border-radius:14px;padding:16px;margin-bottom:16px;width:100%}
-.pc-label{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
-.pc-or{text-align:center;color:var(--t3);font-size:12px;margin:4px 0 12px;letter-spacing:2px;text-transform:uppercase}
+/* APP SHELL */
+.app{min-height:100dvh;background:var(--bg);padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
 
-/* ── CODE DISPLAY (step 4) ── */
-.code-display{background:var(--card);border:2px solid var(--acc);border-radius:14px;padding:20px 16px;width:100%;margin-bottom:16px;text-align:center}
-.code-val{font-family:monospace;font-size:13px;word-break:break-all;color:var(--t1);line-height:1.6;letter-spacing:.5px;margin:8px 0 14px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--brd)}
-.copy-btn{width:100%;background:var(--acc);color:white;border:none;border-radius:10px;padding:11px;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background .2s}
-.copy-btn:hover{background:var(--acc2)}
-.copy-ok{background:var(--acc2)!important}
-
-/* ── APP SHELL ── */
-.app{min-height:100vh;min-height:100dvh;background:var(--bg);padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
-.topbar{background:var(--top);height:56px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+/* ── TOPBAR: respeta notch/status bar ── */
+.topbar{background:var(--top);padding-top:env(safe-area-inset-top,0px);padding-left:20px;padding-right:20px;padding-bottom:12px;min-height:calc(56px + env(safe-area-inset-top,0px));display:flex;align-items:flex-end;justify-content:space-between;position:sticky;top:0;z-index:100}
 .wm{font-family:'Italiana',serif;font-size:28px;letter-spacing:5px;color:#E8D8B4}
 .tr{display:flex;align-items:center;gap:8px}
 .pair-btn{display:flex;align-items:center;gap:3px;background:transparent;border:none;font-family:'Jost',sans-serif;font-size:12px;color:#7A6A4A;cursor:pointer;padding:4px 8px;border-radius:8px;transition:color .2s}
 .pair-btn:hover{color:#E8D8B4}
 .amp{font-family:'Cormorant Garamond',serif;font-style:italic;color:#B07848;margin:0 2px}
-.sync-ico{display:flex;align-items:center;width:20px;height:20px;justify-content:center;font-size:12px}
 
-/* ── TRIP BAR ── */
+/* TRIP BAR */
 .tbar{background:var(--top);padding:0 16px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
 .trow{display:flex;gap:8px;overflow-x:auto;padding-top:10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .trow::-webkit-scrollbar{display:none}
 .tchip{flex-shrink:0;padding:5px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#7A6A4A;font-family:'Jost',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;letter-spacing:.4px;display:flex;align-items:center;gap:5px}
 .tchip.on{background:#E8D8B4;border-color:#E8D8B4;color:var(--top);font-weight:600}
-.tchip:not(.on):hover{border-color:#8A7050;color:#C4A870}
 .tchip.add{border-style:dashed}
-.del-chip{padding:5px 10px;border-radius:20px;border:1px solid rgba(255,60,60,.25);background:transparent;color:rgba(220,80,80,.7);font-family:'Jost',sans-serif;font-size:12px;cursor:pointer;flex-shrink:0;transition:all .2s}
-.del-chip:hover{background:rgba(220,80,80,.1);border-color:rgba(220,80,80,.5);color:rgba(220,80,80,1)}
+.del-chip{padding:5px 10px;border-radius:20px;border:1px solid rgba(255,60,60,.25);background:transparent;color:rgba(220,80,80,.7);font-family:'Jost',sans-serif;font-size:12px;cursor:pointer;flex-shrink:0}
 
-/* ── HERO ── */
+/* HERO */
 .hero{background:linear-gradient(155deg,#211609 0%,#382A14 55%,#281A0C 100%);padding:28px 20px 24px;position:relative;overflow:hidden}
 .hglow{position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle at 80% 20%,rgba(176,120,72,.2),transparent 70%);pointer-events:none}
 .hlbl{font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:#5C4820;margin-bottom:8px}
@@ -137,8 +127,8 @@ body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--t1);-webkit-
 .sn{display:block;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:#D4B870}
 .sl{display:block;font-size:10px;color:#5C4820;text-transform:uppercase;letter-spacing:.5px}
 
-/* ── NAV ── */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--top);display:flex;border-top:1px solid rgba(255,255,255,.04);z-index:200;padding-bottom:env(safe-area-inset-bottom,0);height:calc(72px + env(safe-area-inset-bottom,0px))}
+/* NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--top);display:flex;border-top:1px solid rgba(255,255,255,.04);z-index:200;padding-bottom:env(safe-area-inset-bottom,0px);height:calc(72px + env(safe-area-inset-bottom,0px))}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;border:none;cursor:pointer;position:relative;transition:transform .15s}
 .nb:active{transform:scale(.91)}
 .ni{display:flex;align-items:center;color:#4A3A1A;transition:color .2s,transform .3s cubic-bezier(.34,1.56,.64,1)}
@@ -146,7 +136,7 @@ body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--t1);-webkit-
 .nl{font-size:10px;color:#4A3A1A;font-weight:500;letter-spacing:.5px;text-transform:uppercase;transition:color .2s}
 .pip{position:absolute;bottom:8px;width:4px;height:4px;border-radius:50%;animation:pip .3s cubic-bezier(.34,1.56,.64,1)}
 
-/* ── CONTENT ── */
+/* CONTENT */
 .content{padding:0 16px 12px}
 .tc{padding-top:18px}
 .sec{margin-bottom:26px}
@@ -198,7 +188,7 @@ body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--t1);-webkit-
 .mmood{font-size:20px}
 .rbtn{background:var(--bg);border:1px solid var(--brd);border-radius:12px;padding:5px 12px;display:flex;align-items:center;gap:5px;cursor:pointer;font-family:'Jost',sans-serif;font-size:12px;color:var(--t3);transition:all .2s}
 .rbtn.on{background:#EEE8D8;border-color:var(--acc);color:var(--acc2)}
-.ri{display:flex;align-items:center}.rc{font-weight:600}
+.rc{font-weight:600}
 .mem-empty{text-align:center;padding:48px 0;color:var(--t3)}
 .mem-empty h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--t2);margin-bottom:8px}
 .mem-empty p{font-size:14px}
@@ -212,7 +202,7 @@ body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--t1);-webkit-
 .esub{font-size:14px;color:var(--t3);line-height:1.7;margin-bottom:30px}
 .btn-dark{background:var(--t1);color:#F8F3E8;border:none;border-radius:14px;padding:14px 36px;font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;font-family:'Jost',sans-serif;cursor:pointer}
 
-/* ── MODAL con fix de teclado ── */
+/* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:600;display:flex;align-items:flex-end;animation:fadeIn .2s ease}
 .modal{background:var(--bg);border-radius:24px 24px 0 0;padding:24px;width:100%;max-height:92dvh;overflow-y:auto;animation:slideUp .35s cubic-bezier(.22,.61,.36,1);-webkit-overflow-scrolling:touch;padding-bottom:max(32px,env(safe-area-inset-bottom,0px))}
 .modal h2{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;font-weight:400;margin-bottom:6px;color:var(--t1)}
@@ -230,98 +220,82 @@ body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--t1);-webkit-
 .bpri:hover{background:var(--acc2)}
 .bsec{flex:1;background:var(--div);color:var(--t2);border:none;border-radius:12px;padding:13px;font-size:13px;font-weight:500;font-family:'Jost',sans-serif;cursor:pointer}
 
-/* ── CONFIRM DELETE ── */
-.confirm-del{background:rgba(220,60,60,.06);border:1px solid rgba(220,60,60,.2);border-radius:12px;padding:14px;margin-bottom:16px}
-.confirm-del p{font-size:13px;color:#8A3A3A;line-height:1.5;margin-bottom:12px}
-.del-btn{width:100%;background:#C04040;color:white;border:none;border-radius:10px;padding:11px;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
+/* RESET BUTTON in profile modal */
+.reset-zone{margin-top:20px;padding-top:16px;border-top:1px solid var(--div)}
+.reset-zone p{font-size:12px;color:var(--t3);margin-bottom:8px;line-height:1.5}
+.reset-btn{width:100%;background:transparent;border:1.5px solid rgba(200,60,60,.3);border-radius:10px;padding:10px;font-family:'Jost',sans-serif;font-size:12px;color:rgba(170,50,50,.85);cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.reset-btn:hover{background:rgba(200,60,60,.06);border-color:rgba(200,60,60,.55)}
 </style>
 </head>
 <body>
 <div id="root"></div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-
 <script type="text/babel">
 const {useState,useRef,useEffect,useCallback}=React;
 
-// ── ICONS ──
-const mkSvg=(d,w=19)=><svg width={w} height={w} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{__html:d}}/>;
-const IMap   =()=>mkSvg('<polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/>');
-const IPin   =()=>mkSvg('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>');
-const ICoin  =()=>mkSvg('<circle cx="12" cy="12" r="9"/><path d="M12 7v1m0 8v1M9.5 9.5c0-1.1.9-2 2.5-2s2.5.9 2.5 2-2.5 2.5-2.5 2.5-2.5 1.2-2.5 2.5.9 2 2.5 2 2.5-.9 2.5-2"/>');
-const IBook  =()=>mkSvg('<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>');
-const IPlus  =()=>mkSvg('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',16);
-const IHeart =()=>mkSvg('<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',15);
-const IEdit  =()=>mkSvg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',13);
-const ISync  =()=>mkSvg('<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',13);
-const ITrash =()=>mkSvg('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',14);
+const sv=(d,w=19)=><svg width={w} height={w} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{__html:d}}/>;
+const IMap=()=>sv('<polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/>');
+const IPin=()=>sv('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>');
+const ICoin=()=>sv('<circle cx="12" cy="12" r="9"/><path d="M12 7v1m0 8v1M9.5 9.5c0-1.1.9-2 2.5-2s2.5.9 2.5 2-2.5 2.5-2.5 2.5-2.5 1.2-2.5 2.5.9 2 2.5 2 2.5-.9 2.5-2"/>');
+const IBook=()=>sv('<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>');
+const IPlus=()=>sv('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',16);
+const IHeart=()=>sv('<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',15);
+const IEdit=()=>sv('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',13);
+const ISync=()=>sv('<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',13);
+const ITrash=()=>sv('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',14);
 
-const HEART_LOTTIE={v:"5.9.0",fr:60,ip:0,op:60,w:100,h:100,ddd:0,assets:[],layers:[{ddd:0,ind:1,ty:4,sr:1,ks:{o:{a:0,k:100},r:{a:0,k:0},p:{a:0,k:[50,50,0]},a:{a:0,k:[0,0,0]},s:{a:1,k:[{i:{x:[.4],y:[1]},o:{x:[.6],y:[0]},t:0,s:[80,80,100]},{i:{x:[.4],y:[1]},o:{x:[.6],y:[0]},t:15,s:[130,130,100]},{i:{x:[.4],y:[1]},o:{x:[.6],y:[0]},t:30,s:[90,90,100]},{t:50,s:[100,100,100]}]}},ao:0,shapes:[{ty:"gr",it:[{ty:"sh",ks:{a:0,k:{i:[[0,0],[5,-5],[10,0],[0,10],[-5,5],[0,0],[-5,5],[-10,0],[0,-10],[5,-5]],o:[[0,0],[-5,5],[-10,0],[0,-10],[5,-5],[0,0],[-5,5],[10,0],[0,10],[5,-5]],v:[[0,8],[0,8],[-18,-4],[-18,-14],[-8,-24],[0,-18],[0,-18],[18,-24],[18,-14],[8,-4]],c:true}}},{ty:"fl",c:{a:0,k:[0.69,0.47,0.28,1]},o:{a:0,k:100},r:1},{ty:"tr",p:{a:0,k:[0,0]},a:{a:0,k:[0,0]},s:{a:0,k:[100,100]},r:{a:0,k:0},o:{a:0,k:100}}]}],ip:0,op:60,st:0,bm:0}]};
+const HL={v:"5.9.0",fr:60,ip:0,op:60,w:100,h:100,ddd:0,assets:[],layers:[{ddd:0,ind:1,ty:4,sr:1,ks:{o:{a:0,k:100},r:{a:0,k:0},p:{a:0,k:[50,50,0]},a:{a:0,k:[0,0,0]},s:{a:1,k:[{i:{x:[.4],y:[1]},o:{x:[.6],y:[0]},t:0,s:[80,80,100]},{i:{x:[.4],y:[1]},o:{x:[.6],y:[0]},t:15,s:[130,130,100]},{i:{x:[.4],y:[1]},o:{x:[.6],y:[0]},t:30,s:[90,90,100]},{t:50,s:[100,100,100]}]}},ao:0,shapes:[{ty:"gr",it:[{ty:"sh",ks:{a:0,k:{i:[[0,0],[5,-5],[10,0],[0,10],[-5,5],[0,0],[-5,5],[-10,0],[0,-10],[5,-5]],o:[[0,0],[-5,5],[-10,0],[0,-10],[5,-5],[0,0],[-5,5],[10,0],[0,10],[5,-5]],v:[[0,8],[0,8],[-18,-4],[-18,-14],[-8,-24],[0,-18],[0,-18],[18,-24],[18,-14],[8,-4]],c:true}}},{ty:"fl",c:{a:0,k:[0.69,0.47,0.28,1]},o:{a:0,k:100},r:1},{ty:"tr",p:{a:0,k:[0,0]},a:{a:0,k:[0,0]},s:{a:0,k:[100,100]},r:{a:0,k:0},o:{a:0,k:100}}]}],ip:0,op:60,st:0,bm:0}]};
 
 const TABS=[
-  {id:"plan",     label:"Viaje",     Ic:IMap,  color:"#6B4C2A"},
-  {id:"places",   label:"Lugares",   Ic:IPin,  color:"#3D6B52"},
-  {id:"budget",   label:"Gastos",    Ic:ICoin, color:"#4A5C7A"},
-  {id:"memories", label:"Recuerdos", Ic:IBook, color:"#6B3D5C"},
+  {id:"plan",label:"Viaje",Ic:IMap,color:"#6B4C2A"},
+  {id:"places",label:"Lugares",Ic:IPin,color:"#3D6B52"},
+  {id:"budget",label:"Gastos",Ic:ICoin,color:"#4A5C7A"},
+  {id:"memories",label:"Recuerdos",Ic:IBook,color:"#6B3D5C"},
 ];
 const MOODS=["😍","🥰","🤩","😊","🥳","😌","🌟","💫","✨","🎉","🌈","🫶"];
-
-// Intro slides data
-const INTRO_SLIDES=[
-  {icon:"✈️", bg:"#F0E8D8", title:"Planifiquen juntos", body:"Armen el itinerario, divídanse las tareas y lleguen listos a cada aventura sin olvidarse nada."},
-  {icon:"📍", bg:"#E0EDD8", title:"Descubran lugares", body:"Guarden restaurantes, museos y rincones que quieren explorar. Márquenlos como visitados al ir."},
-  {icon:"💰", bg:"#D8E0EC", title:"Controlen el presupuesto", body:"Vean cuánto llevan gastado en cada categoría y mantengan todo bajo control sin drama."},
-  {icon:"📖", bg:"#EDD8E8", title:"Escriban sus recuerdos", body:"Un diario compartido para los dos. Cada momento especial, guardado con la voz de quien lo vivió."},
+const SLIDES=[
+  {icon:"✈️",bg:"#F0E8D8",title:"Planifiquen juntos",body:"Armen el itinerario, divídanse las tareas y lleguen listos a cada aventura."},
+  {icon:"📍",bg:"#E0EDD8",title:"Descubran lugares",body:"Guarden restaurantes, museos y rincones. Márquenlos como visitados al ir."},
+  {icon:"💰",bg:"#D8E0EC",title:"Controlen el presupuesto",body:"Vean cuánto llevan gastado en cada categoría. Sin sorpresas."},
+  {icon:"📖",bg:"#EDD8E8",title:"Escriban sus recuerdos",body:"Un diario compartido. Cada momento especial, guardado para siempre."},
 ];
 
-const BLOB_API="https://jsonblob.com/api/jsonblob";
-async function syncRead(id){
-  try{const r=await fetch(`${BLOB_API}/${id}`);if(!r.ok)return null;return await r.json();}catch{return null;}
-}
-async function syncWrite(id,data){
-  try{const r=await fetch(`${BLOB_API}/${id}`,{method:"PUT",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(data)});return r.ok;}catch{return false;}
-}
-async function syncCreate(data){
+const BLOB="https://jsonblob.com/api/jsonblob";
+async function bRead(id){try{const r=await fetch(`${BLOB}/${id}`);if(!r.ok)return null;return await r.json();}catch{return null;}}
+async function bWrite(id,d){try{const r=await fetch(`${BLOB}/${id}`,{method:"PUT",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(d)});return r.ok;}catch{return false;}}
+async function bCreate(d){
   try{
-    const r=await fetch(BLOB_API,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(data)});
+    const r=await fetch(BLOB,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(d)});
     if(!r.ok)return null;
     const loc=r.headers.get("Location")||"";
     return loc.split("/").pop()||null;
   }catch{return null;}
 }
 
-const LS={
-  get:k=>{try{return JSON.parse(localStorage.getItem(k));}catch{return null;}},
-  set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}},
-};
+const LS={g:k=>{try{return JSON.parse(localStorage.getItem(k));}catch{return null;}},s:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}};
 
-// ── Fix teclado: scroll input into view on focus ──
-function useKeyboardFix(){
+function useKbFix(){
   useEffect(()=>{
-    const handler=e=>{
+    const h=e=>{
       const el=e.target;
-      if(el.tagName==="INPUT"||el.tagName==="TEXTAREA"||el.tagName==="SELECT"){
-        setTimeout(()=>{
-          el.scrollIntoView({behavior:"smooth",block:"center"});
-        },350);
-      }
+      if(el.tagName==="INPUT"||el.tagName==="TEXTAREA"||el.tagName==="SELECT")
+        setTimeout(()=>el.scrollIntoView({behavior:"smooth",block:"center"}),350);
     };
-    document.addEventListener("focusin",handler);
-    return()=>document.removeEventListener("focusin",handler);
+    document.addEventListener("focusin",h);
+    return()=>document.removeEventListener("focusin",h);
   },[]);
 }
 
-// ── APP ──
 function App(){
-  const saved=LS.get("juntos-local")||{};
-  const [screen,setScreen]=useState(saved.profile?.p1?'app':'onboarding');
-  const [profile,setProfile]=useState(saved.profile||{p1:"",p2:""});
-  const [pairCode,setPairCode]=useState(saved.pairCode||"");
-  const [trips,setTrips]=useState(saved.trips||[]);
-  const [activeTrip,setActiveTrip]=useState(saved.trips?.[0]?.id||null);
+  const sv=LS.g("juntos-local")||{};
+  const [screen,setScreen]=useState(sv.profile?.p1?'app':'onboarding');
+  const [profile,setProfile]=useState(sv.profile||{p1:"",p2:""});
+  const [pairCode,setPairCode]=useState(sv.pairCode||"");
+  const [trips,setTrips]=useState(sv.trips||[]);
+  const [activeTrip,setActiveTrip]=useState(sv.trips?.[0]?.id||null);
   const [tab,setTab]=useState("plan");
   const [modal,setModal]=useState(null);
   const [form,setForm]=useState({});
@@ -330,18 +304,17 @@ function App(){
   const [editProf,setEditProf]=useState(false);
   const [confirmDel,setConfirmDel]=useState(false);
   const pendingTab=useRef(null);
-  const lottieInst=useRef({});
+  const lottieI=useRef({});
   const lastSaved=useRef(0);
-  const ignoreNext=useRef(false);
-  useKeyboardFix();
+  const ignNext=useRef(false);
+  useKbFix();
 
-  useEffect(()=>{LS.set("juntos-local",{profile,trips,pairCode});},[profile,trips,pairCode]);
-
+  useEffect(()=>{LS.s("juntos-local",{profile,trips,pairCode});},[profile,trips,pairCode]);
   useEffect(()=>{
-    if(screen!=="app"||!pairCode) return;
+    if(screen!=="app"||!pairCode)return;
     const iv=setInterval(async()=>{
-      if(ignoreNext.current){ignoreNext.current=false;return;}
-      const d=await syncRead(pairCode);
+      if(ignNext.current){ignNext.current=false;return;}
+      const d=await bRead(pairCode);
       if(d&&d.ts&&d.ts>lastSaved.current){
         lastSaved.current=d.ts;
         if(d.trips){setTrips(d.trips);if(!activeTrip&&d.trips[0])setActiveTrip(d.trips[0].id);}
@@ -351,26 +324,24 @@ function App(){
     return()=>clearInterval(iv);
   },[screen,pairCode]);
 
-  const saveCloud=useCallback(async(t,p,pc)=>{
+  const cloud=useCallback(async(t,p,pc)=>{
     const code=pc||pairCode;if(!code)return;
-    const ts=Date.now();lastSaved.current=ts;setSyncSt("saving");
-    ignoreNext.current=true;
-    const ok=await syncWrite(code,{trips:t,profile:p,ts});
-    setSyncSt(ok?"saved":"idle");
-    if(ok)setTimeout(()=>setSyncSt("idle"),2000);
+    const ts=Date.now();lastSaved.current=ts;setSyncSt("saving");ignNext.current=true;
+    const ok=await bWrite(code,{trips:t,profile:p,ts});
+    setSyncSt(ok?"saved":"idle");if(ok)setTimeout(()=>setSyncSt("idle"),2000);
   },[pairCode]);
 
-  const mountHeart=useCallback((el,id)=>{
+  const mountH=useCallback((el,id)=>{
     if(!el||!window.lottie)return;
-    if(lottieInst.current[id])lottieInst.current[id].destroy();
-    lottieInst.current[id]=window.lottie.loadAnimation({container:el,renderer:"svg",loop:false,autoplay:true,animationData:HEART_LOTTIE});
+    if(lottieI.current[id])lottieI.current[id].destroy();
+    lottieI.current[id]=window.lottie.loadAnimation({container:el,renderer:"svg",loop:false,autoplay:true,animationData:HL});
   },[]);
 
-  const changeTab=(newTab,e)=>{
-    if(newTab===tab)return;
+  const changeTab=(nt,e)=>{
+    if(nt===tab)return;
     const r=e.currentTarget.getBoundingClientRect();
-    const color=TABS.find(t=>t.id===newTab)?.color||"#6B4C2A";
-    pendingTab.current=newTab;
+    const color=TABS.find(t=>t.id===nt)?.color||"#6B4C2A";
+    pendingTab.current=nt;
     setCirc({x:r.left+r.width/2,y:r.top+r.height/2,color,phase:"in"});
     setTimeout(()=>setTab(pendingTab.current),300);
     setTimeout(()=>setCirc(c=>c?{...c,phase:"out"}:null),380);
@@ -378,50 +349,23 @@ function App(){
   };
 
   const trip=trips.find(t=>t.id===activeTrip);
-  const doneChecks=trip?trip.checklist.filter(c=>c.done).length:0;
+  const doneC=trip?trip.checklist.filter(c=>c.done).length:0;
   const pct=trip?Math.min(100,Math.round(trip.budget.spent/trip.budget.total*100)):0;
-
-  const upd=(id,fn)=>{setTrips(prev=>{const next=prev.map(t=>t.id===id?fn(t):t);saveCloud(next,profile);return next;});};
+  const upd=(id,fn)=>{setTrips(prev=>{const next=prev.map(t=>t.id===id?fn(t):t);cloud(next,profile);return next;});};
   const togCheck=id=>upd(activeTrip,t=>({...t,checklist:t.checklist.map(c=>c.id===id?{...c,done:!c.done}:c)}));
   const togPlace=id=>upd(activeTrip,t=>({...t,places:t.places.map(p=>p.id===id?{...p,status:p.status==="want"?"done":"want"}:p)}));
-  const addReact=(mid,el)=>{upd(activeTrip,t=>({...t,memories:t.memories.map(m=>m.id===mid?{...m,reactions:{...m.reactions,heart:(m.reactions.heart||0)+1}}:m)}));if(el)mountHeart(el,`m${mid}`);};
+  const addReact=(mid,el)=>{upd(activeTrip,t=>({...t,memories:t.memories.map(m=>m.id===mid?{...m,reactions:{...m.reactions,heart:(m.reactions.heart||0)+1}}:m)}));if(el)mountH(el,`m${mid}`);};
   const open=type=>{setForm({});setModal(type);};
   const close=()=>setModal(null);
-
-  const deleteTrip=()=>{
-    const next=trips.filter(t=>t.id!==activeTrip);
-    setTrips(next);
-    setActiveTrip(next[0]?.id||null);
-    saveCloud(next,profile);
-    setConfirmDel(false);
-  };
-
-  const saveMem=()=>{
-    if(!form.title||!form.text)return;
-    upd(activeTrip,t=>({...t,memories:[{id:Date.now(),title:form.title,
-      date:new Date().toLocaleDateString("es-AR",{day:"numeric",month:"short"})+" · "+new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"}),
-      author:form.author||"p1",text:form.text,mood:form.mood||"😊",reactions:{heart:0}
-    },...t.memories]}));close();
-  };
+  const delTrip=()=>{const next=trips.filter(t=>t.id!==activeTrip);setTrips(next);setActiveTrip(next[0]?.id||null);cloud(next,profile);setConfirmDel(false);};
+  const saveMem=()=>{if(!form.title||!form.text)return;upd(activeTrip,t=>({...t,memories:[{id:Date.now(),title:form.title,date:new Date().toLocaleDateString("es-AR",{day:"numeric",month:"short"})+" · "+new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"}),author:form.author||"p1",text:form.text,mood:form.mood||"😊",reactions:{heart:0}},...t.memories]}));close();};
   const savePlace=()=>{if(!form.name)return;upd(activeTrip,t=>({...t,places:[...t.places,{id:Date.now(),name:form.name,note:form.note||"",type:form.type||"sight",status:"want"}]}));close();};
   const saveCheck=()=>{if(!form.text)return;upd(activeTrip,t=>({...t,checklist:[...t.checklist,{id:Date.now(),text:form.text,done:false,who:form.who||"both"}]}));close();};
-  const saveTrip=()=>{
-    if(!form.name)return;
-    const nt={id:Date.now(),name:form.name,dates:form.dates||"Por definir",days:parseInt(form.days)||0,budget:{total:parseInt(form.budget)||0,spent:0},itinerary:[],checklist:[],expenses:[],places:[],memories:[]};
-    const next=[...trips,nt];setTrips(next);setActiveTrip(nt.id);saveCloud(next,profile);close();
-  };
-
-  const finishOnboarding=async(p,code)=>{
-    setProfile(p);setPairCode(code);setScreen("app");
-    saveCloud([],p,code);
-  };
-
-  const p1=profile.p1||"Vos";
-  const p2=profile.p2||"Tu amor";
-
-  if(screen==="onboarding")return <Onboarding onComplete={finishOnboarding}/>;
-
-  const activeT=TABS.find(t=>t.id===tab);
+  const saveTrip=()=>{if(!form.name)return;const nt={id:Date.now(),name:form.name,dates:form.dates||"Por definir",days:parseInt(form.days)||0,budget:{total:parseInt(form.budget)||0,spent:0},itinerary:[],checklist:[],expenses:[],places:[],memories:[]};const next=[...trips,nt];setTrips(next);setActiveTrip(nt.id);cloud(next,profile);close();};
+  const finish=async(p,code)=>{setProfile(p);setPairCode(code);setScreen("app");cloud([],p,code);};
+  const doReset=()=>{if(window.confirm("Esto borra los datos locales y te lleva al inicio. ¿Continuar?")){localStorage.removeItem("juntos-local");window.location.reload();}};
+  const p1=profile.p1||"Vos",p2=profile.p2||"Tu amor";
+  if(screen==="onboarding")return <Onboarding onComplete={finish}/>;
 
   return(<>
     {circ&&<div key={`${circ.x}${circ.y}`} className={`cr ${circ.phase}`} style={{left:circ.x,top:circ.y,background:circ.color}}/>}
@@ -429,29 +373,22 @@ function App(){
       <header className="topbar">
         <div className="wm">juntos</div>
         <div className="tr">
-          {syncSt==="saving"&&<span className="sync-ico" style={{color:"#8A7A5A",animation:"spin .8s linear infinite",display:"flex"}}><ISync/></span>}
+          {syncSt==="saving"&&<span style={{color:"#8A7A5A",fontSize:12,display:"flex",animation:"spin .8s linear infinite"}}><ISync/></span>}
           {syncSt==="saved"&&<span style={{color:"#5A8A5A",fontSize:13,fontWeight:700}}>✓</span>}
           <button className="pair-btn" onClick={()=>{setForm({p1:profile.p1,p2:profile.p2});setEditProf(true);}}>
             {p1}<span className="amp"> & </span>{p2}<span style={{marginLeft:4,opacity:.4,display:"flex"}}><IEdit/></span>
           </button>
         </div>
       </header>
-
       <div className="tbar">
         <div className="trow">
           {trips.map(t=><button key={t.id} className={`tchip ${t.id===activeTrip?"on":""}`} onClick={()=>setActiveTrip(t.id)}>{t.name}</button>)}
           <button className="tchip add" onClick={()=>open("trip")}><IPlus/> Nuevo</button>
-          {trip&&<button className="del-chip" onClick={()=>setConfirmDel(true)} title="Eliminar viaje"><ITrash/></button>}
+          {trip&&<button className="del-chip" onClick={()=>setConfirmDel(true)}><ITrash/></button>}
         </div>
       </div>
-
       {!trip?(
-        <div className="empty">
-          <div className="eicon">✈️</div>
-          <h2 className="etitle">¿A dónde van primero?</h2>
-          <p className="esub">Creen su primer viaje y empiecen a planificar juntos.</p>
-          <button className="btn-dark" onClick={()=>open("trip")}>Crear viaje</button>
-        </div>
+        <div className="empty"><div className="eicon">✈️</div><h2 className="etitle">¿A dónde van primero?</h2><p className="esub">Creen su primer viaje y empiecen a planificar juntos.</p><button className="btn-dark" onClick={()=>open("trip")}>Crear viaje</button></div>
       ):(
         <>
           <section className="hero">
@@ -460,7 +397,7 @@ function App(){
             <h1 className="hname">{trip.name}</h1>
             <div className="hdates">{trip.dates}</div>
             <div className="hstats">
-              {[[trip.days,"días"],[`${doneChecks}/${trip.checklist.length}`,"listos"],[trip.memories.length,"recuerdos"],[`${pct}%`,"budget"]].map(([n,l])=>(
+              {[[trip.days,"días"],[`${doneC}/${trip.checklist.length}`,"listos"],[trip.memories.length,"recuerdos"],[`${pct}%`,"budget"]].map(([n,l])=>(
                 <div key={l} className="stat"><span className="sn">{n}</span><span className="sl">{l}</span></div>
               ))}
             </div>
@@ -469,11 +406,10 @@ function App(){
             {tab==="plan"&&<PlanTab trip={trip} togCheck={togCheck} open={open} p1={p1} p2={p2}/>}
             {tab==="places"&&<PlacesTab trip={trip} togPlace={togPlace} open={open}/>}
             {tab==="budget"&&<BudgetTab trip={trip} pct={pct}/>}
-            {tab==="memories"&&<MemoriesTab trip={trip} addReact={addReact} mountHeart={mountHeart} open={open} p1={p1} p2={p2}/>}
+            {tab==="memories"&&<MemTab trip={trip} addReact={addReact} mountH={mountH} open={open} p1={p1} p2={p2}/>}
           </main>
         </>
       )}
-
       <nav className="bnav">
         {TABS.map(t=><button key={t.id} className={`nb ${tab===t.id?"on":""}`} onClick={e=>changeTab(t.id,e)}>
           <span className="ni" style={tab===t.id?{color:t.color}:{}}><t.Ic/></span>
@@ -492,10 +428,10 @@ function App(){
 
     {confirmDel&&<div className="overlay" onClick={()=>setConfirmDel(false)}><div className="modal" onClick={e=>e.stopPropagation()}>
       <h2>Eliminar viaje</h2>
-      <p className="sub">¿Seguro que quieren eliminar <strong>{trip?.name}</strong>? Esto no se puede deshacer.</p>
-      <div className="confirm-del">
-        <p>Se van a borrar todos los datos: checklist, lugares, gastos y recuerdos de este viaje.</p>
-        <button className="del-btn" onClick={deleteTrip}>Sí, eliminar</button>
+      <p className="sub">¿Seguro que quieren eliminar <strong>{trip?.name}</strong>? No se puede deshacer.</p>
+      <div style={{background:"rgba(220,60,60,.06)",border:"1px solid rgba(220,60,60,.2)",borderRadius:12,padding:14,marginBottom:14}}>
+        <p style={{fontSize:13,color:"#8A3A3A",lineHeight:1.5,marginBottom:12}}>Se borran todos los datos: checklist, lugares, gastos y recuerdos.</p>
+        <button style={{width:"100%",background:"#C04040",color:"white",border:"none",borderRadius:10,padding:"11px",fontFamily:"'Jost',sans-serif",fontSize:12,fontWeight:600,letterSpacing:1,textTransform:"uppercase",cursor:"pointer"}} onClick={delTrip}>Sí, eliminar</button>
       </div>
       <button className="bsec" style={{width:"100%"}} onClick={()=>setConfirmDel(false)}>Cancelar</button>
     </div></div>}
@@ -507,61 +443,58 @@ function App(){
       <F label="Tu pareja"><input className="fi" defaultValue={profile.p2} onChange={e=>setForm({...form,p2:e.target.value})}/></F>
       <div className="brow">
         <button className="bsec" onClick={()=>setEditProf(false)}>Cancelar</button>
-        <button className="bpri" onClick={()=>{const np={p1:form.p1??profile.p1,p2:form.p2??profile.p2};setProfile(np);saveCloud(trips,np);setEditProf(false);}}>Guardar</button>
+        <button className="bpri" onClick={()=>{const np={p1:form.p1??profile.p1,p2:form.p2??profile.p2};setProfile(np);cloud(trips,np);setEditProf(false);}}>Guardar</button>
+      </div>
+      <div className="reset-zone">
+        <p>¿Querés usar un código diferente o empezar de cero?</p>
+        <button className="reset-btn" onClick={doReset}>Reiniciar app</button>
       </div>
     </div></div>}
   </>);
 }
 
-// ── ONBOARDING ──
 function Onboarding({onComplete}){
-  const [step,setStep]=useState(0);   // 0=splash 1=intro-slides 2=nombres 3=pair 4=show-code
+  const [step,setStep]=useState(0);
   const [slide,setSlide]=useState(0);
   const [p1,setP1]=useState("");
   const [p2,setP2]=useState("");
   const [pairInput,setPairInput]=useState("");
   const [loading,setLoading]=useState(false);
   const [error,setError]=useState("");
-  const [generatedCode,setGeneratedCode]=useState("");
+  const [code,setCode]=useState("");
   const [copied,setCopied]=useState(false);
-  useKeyboardFix();
+  useKbFix();
 
   const handleNew=async()=>{
-    if(!p1.trim()||!p2.trim())return;
     setLoading(true);setError("");
-    const id=await syncCreate({trips:[],profile:{p1:p1.trim(),p2:p2.trim()},ts:Date.now()});
+    const id=await bCreate({trips:[],profile:{p1:p1.trim(),p2:p2.trim()},ts:Date.now()});
     setLoading(false);
     if(!id){setError("No se pudo conectar. Revisá tu internet e intentá de nuevo.");return;}
-    setGeneratedCode(id);
-    setStep(4);
+    setCode(id);setStep(4);
   };
-
   const handleJoin=async()=>{
-    if(!pairInput.trim()||!p1.trim())return;
+    if(!pairInput.trim())return;
     setLoading(true);setError("");
-    const d=await syncRead(pairInput.trim());
+    const d=await bRead(pairInput.trim());
     setLoading(false);
-    if(!d){setError("No encontramos ese código. Verificá que esté bien escrito.");return;}
+    if(!d){setError("Código no encontrado. Verificá que esté bien escrito.");return;}
     onComplete({p1:p1.trim(),p2:d.profile?.p1||d.profile?.p2||"Tu pareja"},pairInput.trim());
   };
-
   const copyCode=()=>{
-    if(navigator.clipboard){navigator.clipboard.writeText(generatedCode).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),2500);});}
-    else{
-      const ta=document.createElement("textarea");ta.value=generatedCode;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);setCopied(true);setTimeout(()=>setCopied(false),2500);
-    }
+    const done=()=>{setCopied(true);setTimeout(()=>setCopied(false),2500);};
+    if(navigator.clipboard)navigator.clipboard.writeText(code).then(done);
+    else{const t=document.createElement("textarea");t.value=code;document.body.appendChild(t);t.select();document.execCommand("copy");document.body.removeChild(t);done();}
   };
 
   return(
     <div className="ob">
       <div className="ob-r" style={{width:340,height:340,top:-100,right:-100}}/>
       <div className="ob-r" style={{width:580,height:580,bottom:-250,left:-180,borderColor:"rgba(138,92,42,.07)"}}/>
-      <div className="ob-r" style={{width:240,height:240,top:"40%",right:-80,borderColor:"rgba(138,92,42,.1)"}}/>
 
       {/* SPLASH */}
-      {step===0&&<div className="ob-content ob-splash fi">
+      {step===0&&<div className="ob-c ob-splash fad">
         <div className="ob-orn">◆</div>
-        <div className="ob-center">
+        <div className="ob-mid">
           <h1 className="ob-wm">juntos</h1>
           <div className="ob-line"/>
           <p className="ob-tag">Un diario de viaje<br/>para los dos</p>
@@ -569,211 +502,135 @@ function Onboarding({onComplete}){
         <div className="ob-bot">
           <div className="ob-dots">◦ · ◦ · ◦</div>
           <p className="ob-desc">Planifiquen escapadas, descubran lugares<br/>y guarden los momentos que importan.</p>
-          <button className="ob-cta" onClick={()=>setStep(1)}>Comenzar</button>
+          <button className="cta cta-ani" onClick={()=>setStep(1)}>Comenzar</button>
         </div>
       </div>}
 
       {/* INTRO SLIDES */}
-      {step===1&&<div className="ob-content fi" style={{paddingTop:16}}>
-        <div className="ob-mini" style={{marginBottom:24}}>juntos</div>
-        <div className="slides-wrap">
-          <div className="slides-track" style={{transform:`translateX(-${slide*100}%)`}}>
-            {INTRO_SLIDES.map((s,i)=><div key={i} className="slide">
-              <div className="slide-icon" style={{background:s.bg}}>{s.icon}</div>
-              <h3 className="slide-title">{s.title}</h3>
-              <p className="slide-body">{s.body}</p>
-            </div>)}
-          </div>
-        </div>
-        <div className="slide-dots">
-          {INTRO_SLIDES.map((_,i)=><div key={i} className={`sdot ${i===slide?"on":""}`} onClick={()=>setSlide(i)}/>)}
-        </div>
-        <div className="slides-nav">
-          {slide>0&&<button className="sback" onClick={()=>setSlide(s=>s-1)}>←</button>}
-          {slide<INTRO_SLIDES.length-1
-            ?<button className="snext" onClick={()=>setSlide(s=>s+1)}>Siguiente →</button>
-            :<button className="snext" onClick={()=>setStep(2)}>Empezar →</button>
-          }
+      {step===1&&<div className="ob-c fad" style={{paddingTop:4}}>
+        <div className="ob-mini" style={{marginBottom:18}}>juntos</div>
+        <div className="sw"><div className="st" style={{transform:`translateX(-${slide*100}%)`}}>
+          {SLIDES.map((s,i)=><div key={i} className="sl">
+            <div className="si" style={{background:s.bg}}>{s.icon}</div>
+            <h3 className="sh">{s.title}</h3>
+            <p className="sb">{s.body}</p>
+          </div>)}
+        </div></div>
+        <div className="sdots">{SLIDES.map((_,i)=><div key={i} className={`sd ${i===slide?"on":""}`} onClick={()=>setSlide(i)}/>)}</div>
+        <div className="snav">
+          {slide>0&&<button className="sbk" onClick={()=>setSlide(s=>s-1)}>←</button>}
+          {slide<SLIDES.length-1
+            ?<button className="snx" onClick={()=>setSlide(s=>s+1)}>Siguiente →</button>
+            :<button className="snx" onClick={()=>setStep(2)}>Empezar →</button>}
         </div>
         <button className="ob-back" onClick={()=>setStep(0)}>← Volver</button>
       </div>}
 
       {/* NOMBRES */}
-      {step===2&&<div className="ob-content fi">
+      {step===2&&<div className="ob-c fad">
         <div className="ob-mini">juntos</div>
         <h2 className="ob-nt">¿Cómo se llaman?</h2>
         <p className="ob-ns">Usen apodos, nombres de cariño,<br/>lo que quieran ver en la app.</p>
-        <div className="ob-fields">
-          <div className="ob-lbl">Tu nombre</div>
-          <input className="ob-inp" placeholder="Lucas, Lucho…" value={p1} onChange={e=>setP1(e.target.value)} autoFocus/>
-          <div className="ob-amp">&</div>
-          <input className="ob-inp" placeholder="Brenda, Bren, amor…" value={p2} onChange={e=>setP2(e.target.value)}/>
-        </div>
-        {p1&&p2&&<div className="ob-prev fi"><span>{p1}</span><em> & </em><span>{p2}</span></div>}
-        <button className="ob-cta noani" disabled={!p1.trim()||!p2.trim()} onClick={()=>setStep(3)}>Siguiente →</button>
+        <input className="ob-inp" placeholder="Tu nombre (Lucas, Lucho…)" value={p1} onChange={e=>setP1(e.target.value)} autoFocus/>
+        <div className="ob-amp">&</div>
+        <input className="ob-inp" placeholder="Tu pareja (Brenda, amor…)" value={p2} onChange={e=>setP2(e.target.value)}/>
+        {p1&&p2&&<div className="ob-prev fad" style={{marginTop:16}}><span>{p1}</span><em> & </em><span>{p2}</span></div>}
+        <button className="cta" style={{marginTop:20}} disabled={!p1.trim()||!p2.trim()} onClick={()=>setStep(3)}>Siguiente →</button>
         <button className="ob-back" onClick={()=>setStep(1)}>← Volver</button>
       </div>}
 
       {/* CREAR O UNIRSE */}
-      {step===3&&<div className="ob-content fi">
+      {step===3&&<div className="ob-c fad">
         <div className="ob-mini">juntos</div>
         <h2 className="ob-nt">Espacio compartido</h2>
-        <p className="ob-ns" style={{marginBottom:20}}>Para que todo lo que hagan se vea en los dos dispositivos.</p>
-
+        <p className="ob-ns" style={{marginBottom:18}}>Para que todo lo que hagan se vea en los dos dispositivos en tiempo real.</p>
         <div className="pc-box">
-          <div className="pc-label">Crear nuevo espacio</div>
-          <p style={{fontSize:13,color:"var(--t2)",lineHeight:1.6,marginBottom:14}}>
-            Sos el primero en entrar. Vas a recibir un código para compartirle a {p2||"tu pareja"}.
-          </p>
-          <button className="ob-cta noani" disabled={loading} style={{padding:"13px"}} onClick={handleNew}>
-            {loading?"Creando espacio…":"Crear y obtener mi código"}
-          </button>
+          <div className="pc-lbl">Crear nuevo espacio</div>
+          <p style={{fontSize:13,color:"var(--t2)",lineHeight:1.6,marginBottom:14}}>Sos el primero en entrar. Vas a recibir un código para compartirle a {p2||"tu pareja"}.</p>
+          <button className="cta" disabled={loading} onClick={handleNew}>{loading?"Creando espacio…":"Crear y obtener mi código"}</button>
         </div>
-
         <div className="pc-or">— o —</div>
-
         <div className="pc-box">
-          <div className="pc-label">{p2||"Tu pareja"} ya creó el espacio</div>
-          <p style={{fontSize:13,color:"var(--t2)",lineHeight:1.6,marginBottom:10}}>
-            Pegá el código que te compartió.
-          </p>
-          <div className="ff">
-            <label className="fl">Código</label>
-            <input className="fi" placeholder="Pegá el código aquí" value={pairInput} onChange={e=>setPairInput(e.target.value)} style={{fontFamily:"monospace",fontSize:13}}/>
-          </div>
-          {error&&<p style={{color:"#C04040",fontSize:12,marginTop:4,marginBottom:8,lineHeight:1.4}}>{error}</p>}
-          <button className="ob-cta noani" disabled={!pairInput.trim()||loading} style={{padding:"13px",marginTop:8}} onClick={handleJoin}>
-            {loading?"Verificando…":"Unirme al espacio"}
-          </button>
+          <div className="pc-lbl">{p2||"Tu pareja"} ya creó el espacio</div>
+          <p style={{fontSize:13,color:"var(--t2)",lineHeight:1.6,marginBottom:10}}>Pegá el código que te compartió.</p>
+          <input className="fi" placeholder="Pegá el código aquí" value={pairInput} onChange={e=>setPairInput(e.target.value)} style={{fontFamily:"monospace",fontSize:13,marginBottom:8}}/>
+          {error&&<p style={{color:"#C04040",fontSize:12,marginBottom:8,lineHeight:1.4}}>{error}</p>}
+          <button className="cta" disabled={!pairInput.trim()||loading} onClick={handleJoin}>{loading?"Verificando…":"Unirme al espacio"}</button>
         </div>
-
         <button className="ob-back" onClick={()=>setStep(2)}>← Volver</button>
       </div>}
 
-      {/* MOSTRAR CÓDIGO GENERADO */}
-      {step===4&&<div className="ob-content fi">
+      {/* MOSTRAR CÓDIGO — pantalla dedicada */}
+      {step===4&&<div className="ob-c fad">
         <div className="ob-mini">juntos</div>
         <h2 className="ob-nt" style={{marginBottom:8}}>¡Tu código está listo!</h2>
-        <p className="ob-ns" style={{marginBottom:20}}>
-          Compartile este código a {p2||"tu pareja"} para que se una al espacio compartido.
-        </p>
-
-        <div className="code-display">
-          <div style={{fontSize:10,fontWeight:600,color:"var(--t3)",textTransform:"uppercase",letterSpacing:1,marginBottom:4}}>Tu código de pareja</div>
-          <div className="code-val">{generatedCode}</div>
-          <button className={`copy-btn ${copied?"copy-ok":""}`} onClick={copyCode}>
-            {copied?"¡Copiado! ✓":"Copiar código"}
-          </button>
+        <p className="ob-ns" style={{marginBottom:20}}>Compartile este código a <strong style={{color:"var(--acc)"}}>{p2}</strong> para que se una al espacio.</p>
+        <div className="codebox">
+          <div style={{fontSize:10,fontWeight:600,color:"var(--t3)",textTransform:"uppercase",letterSpacing:1,marginBottom:4}}>Código de pareja</div>
+          <div className="codeval">{code}</div>
+          <button className={`copybtn ${copied?"ok":""}`} onClick={copyCode}>{copied?"¡Copiado! ✓":"Copiar código"}</button>
         </div>
-
         <div style={{background:"rgba(176,120,72,.07)",borderRadius:12,padding:"12px 14px",marginBottom:20,fontSize:13,color:"var(--t2)",lineHeight:1.65}}>
-          <strong style={{display:"block",fontSize:10,textTransform:"uppercase",letterSpacing:1,color:"var(--t3)",marginBottom:5}}>Cómo se une {p2||"tu pareja"}</strong>
-          Abre la app → toca "Comenzar" → ingresa su nombre → elige "Unirme al espacio" → pega este código.
+          <strong style={{display:"block",fontSize:10,textTransform:"uppercase",letterSpacing:1,color:"var(--t3)",marginBottom:5}}>¿Cómo se une {p2}?</strong>
+          Abre la app → toca "Comenzar" → ingresa su nombre → elige <em>"Unirme al espacio"</em> → pega este código.
         </div>
-
-        <button className="ob-cta noani" onClick={()=>onComplete({p1:p1.trim(),p2:p2.trim()},generatedCode)}>
-          Entrar a la app →
-        </button>
+        <button className="cta" onClick={()=>onComplete({p1:p1.trim(),p2:p2.trim()},code)}>Entrar a la app →</button>
       </div>}
     </div>
   );
 }
 
-// ── TABS ──
+/* ── TABS ── */
 function PlanTab({trip,togCheck,open,p1,p2}){
   const wl=w=>w==="both"?"Ambos":w==="p1"?p1:p2;
-  return(<div className="tc fu">
-    <Sec title="Antes de partir">
-      <div className="card">
-        {trip.checklist.length===0&&<p style={{textAlign:"center",color:"var(--t3)",fontSize:14,padding:"8px 0"}}>Sin ítems aún</p>}
-        {trip.checklist.map(i=>(
-          <div key={i.id} className={`crow ${i.done?"done":""}`} onClick={()=>togCheck(i.id)}>
-            <div className={`cb ${i.done?"ck":""}`}>{i.done&&"✓"}</div>
-            <span className="ctext">{i.text}</span>
-            <span className={`who w${i.who}`}>{wl(i.who)}</span>
-          </div>
-        ))}
-      </div>
-      <AddBtn onClick={()=>open("check")}>Agregar ítem</AddBtn>
-    </Sec>
-    <Sec title="Itinerario">
-      {trip.itinerary.length===0
-        ?<div className="card" style={{textAlign:"center",color:"var(--t3)",fontSize:14,padding:"16px"}}>Sin actividades aún</div>
-        :trip.itinerary.map(day=><div key={day.day}>
-          <div className="dh"><span className="dbadge">Día {day.day}</span><span className="dname">{day.dayName}</span></div>
-          <div className="card">{day.activities.map((a,i)=><div key={i} className="act">
-            <span className="atime">{a.time}</span><span className={`adot t-${a.type}`}/>
-            <div><div className="aname">{a.name}</div>{a.note&&<div className="anote">{a.note}</div>}</div>
-          </div>)}</div>
-        </div>)}
-    </Sec>
-  </div>);
-}
-
-function PlacesTab({trip,togPlace,open}){
-  return(<div className="tc fu"><Sec title="Lugares para descubrir">
-    <div className="card">
-      {trip.places.length===0&&<p style={{textAlign:"center",color:"var(--t3)",fontSize:14,padding:"8px 0"}}>Sin lugares aún</p>}
-      {trip.places.map(p=><div key={p.id} className="prow">
-        <div className={`pmark pm-${p.type}`}/><div className="pinfo"><div className="pname">{p.name}</div>{p.note&&<div className="pnote">{p.note}</div>}</div>
-        <button className={`pbadge pb-${p.status}`} onClick={()=>togPlace(p.id)}>{p.status==="done"?"Visitado":"Pendiente"}</button>
+  return(<div className="tc fu"><Sec title="Antes de partir"><div className="card">
+    {trip.checklist.length===0&&<p style={{textAlign:"center",color:"var(--t3)",fontSize:14,padding:"8px 0"}}>Sin ítems aún</p>}
+    {trip.checklist.map(i=><div key={i.id} className={`crow ${i.done?"done":""}`} onClick={()=>togCheck(i.id)}>
+      <div className={`cb ${i.done?"ck":""}`}>{i.done&&"✓"}</div>
+      <span className="ctext">{i.text}</span><span className={`who w${i.who}`}>{wl(i.who)}</span>
+    </div>)}
+  </div><AddBtn onClick={()=>open("check")}>Agregar ítem</AddBtn></Sec>
+  <Sec title="Itinerario">
+    {trip.itinerary.length===0
+      ?<div className="card" style={{textAlign:"center",color:"var(--t3)",fontSize:14,padding:"16px"}}>Sin actividades aún</div>
+      :trip.itinerary.map(day=><div key={day.day}>
+        <div className="dh"><span className="dbadge">Día {day.day}</span><span className="dname">{day.dayName}</span></div>
+        <div className="card">{day.activities.map((a,i)=><div key={i} className="act">
+          <span className="atime">{a.time}</span><span className={`adot t-${a.type}`}/>
+          <div><div className="aname">{a.name}</div>{a.note&&<div className="anote">{a.note}</div>}</div>
+        </div>)}</div>
       </div>)}
-    </div>
-    <AddBtn onClick={()=>open("place")}>Agregar lugar</AddBtn>
   </Sec></div>);
 }
+function PlacesTab({trip,togPlace,open}){return(<div className="tc fu"><Sec title="Lugares para descubrir"><div className="card">
+  {trip.places.length===0&&<p style={{textAlign:"center",color:"var(--t3)",fontSize:14,padding:"8px 0"}}>Sin lugares aún</p>}
+  {trip.places.map(p=><div key={p.id} className="prow"><div className={`pmark pm-${p.type}`}/><div className="pinfo"><div className="pname">{p.name}</div>{p.note&&<div className="pnote">{p.note}</div>}</div><button className={`pbadge pb-${p.status}`} onClick={()=>togPlace(p.id)}>{p.status==="done"?"Visitado":"Pendiente"}</button></div>)}
+</div><AddBtn onClick={()=>open("place")}>Agregar lugar</AddBtn></Sec></div>);}
+function BudgetTab({trip,pct}){return(<div className="tc fu"><Sec title="Presupuesto"><div className="card">
+  <div className="budh"><div><div className="budl">Gastado</div><div className="budv">${trip.budget.spent.toLocaleString("es-AR")}</div></div><div style={{textAlign:"right"}}><div className="budl">Total</div><div className="budv">${trip.budget.total.toLocaleString("es-AR")}</div></div></div>
+  <div className="budtrack"><div className="budfill" style={{width:`${pct}%`}}/></div>
+  <div className="budrem">{100-pct}% disponible</div>
+  {trip.expenses.map((e,i)=><div key={i} className="exprow"><div className={`expdot d-${e.dot}`}/><span className="expcat">{e.cat}</span><span className="expamt">${e.amount.toLocaleString("es-AR")}</span></div>)}
+  {!trip.expenses.length&&<p style={{textAlign:"center",color:"var(--t3)",fontSize:14,paddingTop:8}}>Sin gastos registrados</p>}
+</div></Sec></div>);}
+function MemTab({trip,addReact,mountH,open,p1,p2}){return(<div className="tc fu"><button className="add-pri" onClick={()=>open("memory")}>Escribir un recuerdo</button>
+  {!trip.memories.length?<div className="mem-empty"><div style={{fontSize:36,marginBottom:12}}>📖</div><h3>El diario está en blanco</h3><p>Empiecen a escribir sus recuerdos</p></div>
+  :trip.memories.map(m=><MemCard key={m.id} m={m} onReact={addReact} mountH={mountH} p1={p1} p2={p2}/>)}
+</div>);}
 
-function BudgetTab({trip,pct}){
-  return(<div className="tc fu"><Sec title="Presupuesto del viaje">
-    <div className="card">
-      <div className="budh">
-        <div><div className="budl">Gastado</div><div className="budv">${trip.budget.spent.toLocaleString("es-AR")}</div></div>
-        <div style={{textAlign:"right"}}><div className="budl">Total</div><div className="budv">${trip.budget.total.toLocaleString("es-AR")}</div></div>
-      </div>
-      <div className="budtrack"><div className="budfill" style={{width:`${pct}%`}}/></div>
-      <div className="budrem">{100-pct}% disponible</div>
-      {trip.expenses.length>0&&<div className="explist">{trip.expenses.map((e,i)=><div key={i} className="exprow">
-        <div className={`expdot d-${e.dot}`}/><span className="expcat">{e.cat}</span><span className="expamt">${e.amount.toLocaleString("es-AR")}</span>
-      </div>)}</div>}
-      {trip.expenses.length===0&&<p style={{textAlign:"center",color:"var(--t3)",fontSize:14,paddingTop:8}}>Sin gastos registrados</p>}
-    </div>
-  </Sec></div>);
+function MemCard({m,onReact,mountH,p1,p2}){
+  const lr=useRef(null);const[did,setDid]=useState(false);
+  const aname=m.author==="p1"?p1:p2,acls=m.author==="p1"?"ap1":"ap2";
+  const react=()=>{if(did)return;setDid(true);onReact(m.id,lr.current);};
+  return(<article className="mcard fu"><header className="mhead"><div><time className="mdate">{m.date}</time><h3 className="mtitle">{m.title}</h3></div><span className={`atag ${acls}`}>{aname}</span></header><p className="mbody">{m.text}</p><footer className="mfoot"><span className="mmood">{m.mood}</span><button className={`rbtn ${did?"on":""}`} onClick={react}><span ref={r=>{if(r&&did)mountH(r,`m${m.id}`)}} style={{display:did?"inline-block":"none",width:22,height:22,verticalAlign:"middle"}}/>{!did&&<span style={{display:"flex"}}><IHeart/></span>}{m.reactions.heart>0&&<span className="rc">{m.reactions.heart}</span>}</button></footer></article>);
 }
 
-function MemoriesTab({trip,addReact,mountHeart,open,p1,p2}){
-  return(<div className="tc fu">
-    <button className="add-pri" onClick={()=>open("memory")}>Escribir un recuerdo</button>
-    {trip.memories.length===0
-      ?<div className="mem-empty"><div style={{fontSize:36,marginBottom:12}}>📖</div><h3>El diario está en blanco</h3><p>Empiecen a escribir sus recuerdos</p></div>
-      :trip.memories.map(m=><MemCard key={m.id} m={m} onReact={addReact} mountHeart={mountHeart} p1={p1} p2={p2}/>)
-    }
-  </div>);
-}
-
-function MemCard({m,onReact,mountHeart,p1,p2}){
-  const lref=useRef(null);const[did,setDid]=useState(false);
-  const aname=m.author==="p1"?p1:p2;const acls=m.author==="p1"?"ap1":"ap2";
-  const react=()=>{if(did)return;setDid(true);onReact(m.id,lref.current);};
-  return(<article className="mcard fu">
-    <header className="mhead"><div><time className="mdate">{m.date}</time><h3 className="mtitle">{m.title}</h3></div><span className={`atag ${acls}`}>{aname}</span></header>
-    <p className="mbody">{m.text}</p>
-    <footer className="mfoot"><span className="mmood">{m.mood}</span>
-      <button className={`rbtn ${did?"on":""}`} onClick={react}>
-        <span ref={r=>{if(r&&did)mountHeart(r,`m${m.id}`)}} style={{display:did?"inline-block":"none",width:22,height:22,verticalAlign:"middle"}}/>
-        {!did&&<span className="ri"><IHeart/></span>}
-        {m.reactions.heart>0&&<span className="rc">{m.reactions.heart}</span>}
-      </button>
-    </footer>
-  </article>);
-}
-
-// ── MODALS ──
+/* ── MODALS ── */
 function MemModal({form,sf,onSave,onClose,p1,p2}){return<><h2>Nuevo recuerdo</h2><F label="Título"><input className="fi" placeholder="El momento que quieren recordar…" value={form.title||""} onChange={e=>sf({...form,title:e.target.value})}/></F><F label="Cuéntalo"><textarea className="fi fta" placeholder="Lo que sentiste, lo que pasó…" value={form.text||""} onChange={e=>sf({...form,text:e.target.value})}/></F><F label="¿Quién escribe?"><select className="fi" value={form.author||"p1"} onChange={e=>sf({...form,author:e.target.value})}><option value="p1">{p1}</option><option value="p2">{p2}</option></select></F><F label="Estado de ánimo"><div className="egrid">{MOODS.map(m=><button key={m} className={`emb ${form.mood===m?"sel":""}`} onClick={()=>sf({...form,mood:m})}>{m}</button>)}</div></F><Btns onCancel={onClose} onSave={onSave} label="Guardar recuerdo"/></>;}
-function PlaceModal({form,sf,onSave,onClose}){return<><h2>Agregar lugar</h2><F label="Nombre del lugar"><input className="fi" placeholder="Café Tortoni, MALBA…" value={form.name||""} onChange={e=>sf({...form,name:e.target.value})}/></F><F label="Nota"><input className="fi" placeholder="Por qué quieren ir, horarios…" value={form.note||""} onChange={e=>sf({...form,note:e.target.value})}/></F><F label="Tipo"><select className="fi" value={form.type||"sight"} onChange={e=>sf({...form,type:e.target.value})}><option value="food">Para comer</option><option value="sight">Para ver</option><option value="sleep">Para dormir</option><option value="shop">Para comprar</option></select></F><Btns onCancel={onClose} onSave={onSave} label="Agregar"/></>;}
+function PlaceModal({form,sf,onSave,onClose}){return<><h2>Agregar lugar</h2><F label="Nombre"><input className="fi" placeholder="Café Tortoni, MALBA…" value={form.name||""} onChange={e=>sf({...form,name:e.target.value})}/></F><F label="Nota"><input className="fi" placeholder="Por qué quieren ir…" value={form.note||""} onChange={e=>sf({...form,note:e.target.value})}/></F><F label="Tipo"><select className="fi" value={form.type||"sight"} onChange={e=>sf({...form,type:e.target.value})}><option value="food">Para comer</option><option value="sight">Para ver</option><option value="sleep">Para dormir</option><option value="shop">Para comprar</option></select></F><Btns onCancel={onClose} onSave={onSave} label="Agregar"/></>;}
 function CheckModal({form,sf,onSave,onClose,p1,p2}){return<><h2>Agregar ítem</h2><F label="Tarea o cosa a llevar"><input className="fi" placeholder="Reservar hotel, cargar cámara…" value={form.text||""} onChange={e=>sf({...form,text:e.target.value})}/></F><F label="Responsable"><select className="fi" value={form.who||"both"} onChange={e=>sf({...form,who:e.target.value})}><option value="p1">{p1}</option><option value="p2">{p2}</option><option value="both">Ambos</option></select></F><Btns onCancel={onClose} onSave={onSave} label="Agregar"/></>;}
 function TripModal({form,sf,onSave,onClose}){return<><h2>Nuevo viaje</h2><F label="Destino"><input className="fi" placeholder="Mendoza, Bariloche, Roma…" value={form.name||""} onChange={e=>sf({...form,name:e.target.value})}/></F><F label="Fechas"><input className="fi" placeholder="14 – 18 Mar 2026" value={form.dates||""} onChange={e=>sf({...form,dates:e.target.value})}/></F><F label="Días"><input className="fi" type="number" inputMode="numeric" placeholder="5" value={form.days||""} onChange={e=>sf({...form,days:e.target.value})}/></F><F label="Presupuesto ($)"><input className="fi" type="number" inputMode="numeric" placeholder="150000" value={form.budget||""} onChange={e=>sf({...form,budget:e.target.value})}/></F><Btns onCancel={onClose} onSave={onSave} label="Crear viaje"/></>;}
 
-// ── ATOMS ──
 const Sec=({title,children})=><div className="sec"><h3 className="stitle">{title}</h3>{children}</div>;
 const AddBtn=({onClick,children})=><button className="addbtn" onClick={onClick}><IPlus/>{children}</button>;
 const F=({label,children})=><div className="ff"><label className="fl">{label}</label>{children}</div>;
